@@ -49,7 +49,6 @@ const DesignGrid = () => {
   return (
     <section id="designs" className="mt-16 px-4 md:px-16 text-center">
       <div className="space-y-6 mb-10">
-        <div className="w-275 h-[2px] bg-white grid justify-center mt-[5px]" />
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">Infinite Styles.</h1>
         <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto">
       Trial Room will appear when you add something to cart

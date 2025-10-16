@@ -237,9 +237,9 @@ export default function DesignPreview() {
             </p>
           </div>
 
-          {/* Main Customizer Section */}
-          <div className="flex flex-col xl:flex-row gap-4 md:gap-6 mb-12">
-            
+                    {/* Main Customizer Section */}
+          <div className="bg-white p-6 rounded-2xl shadow-xl mb-12">
+            <div className="flex flex-col xl:flex-row gap-4 md:gap-6">
             {/* Left Column - T-shirt Selector with Showroom */}
             <div className="xl:w-1/2">
               {/* T-shirt Selector */}
@@ -403,7 +403,7 @@ export default function DesignPreview() {
 
             {/* Right Column - Preview & Add to Cart */}
             <div className="xl:w-1/2 flex flex-col mt-0">
-            <div className={`bg-white p-4 rounded-2xl shadow-xl flex-1 bg-gradient-to-br ${currentColors.preview}`}>
+            <div className={`bg-white p-9 rounded-2xl shadow-xl w-[95%] mx-auto bg-gradient-to-br ${currentColors.preview}`}>
               <div className="text-center mb-4">
                   <h3 className="text-xl font-bold text-gray-900">Your Custom Creation</h3>
                   <p className="text-gray-600 text-sm">Live Preview - Changes Instantly</p>
@@ -468,9 +468,10 @@ export default function DesignPreview() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+} 

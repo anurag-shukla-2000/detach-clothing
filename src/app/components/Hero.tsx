@@ -109,7 +109,6 @@ export default function TShirtShowcaseWithTwoVideos() {
 
   return (
     <div className="min-h-screen mt-15 bg-gradient-to-br from-[#0f0f0f] via-black to-[#0f0f0f] text-white flex flex-col items-center justify-center p-6">
-      <div className="w-275 h-[2px] bg-white grid justify-center mb-10 mt-[15px]" />
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -118,7 +117,7 @@ export default function TShirtShowcaseWithTwoVideos() {
       >
         Comfortable - Durable - Easy to Use 
       </motion.h1>
-
+      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start w-full max-w-7xl">
         {/* Video 1 */}
         {[0, 1].map((i) =>

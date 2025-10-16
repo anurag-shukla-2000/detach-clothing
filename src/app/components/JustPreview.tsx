@@ -176,17 +176,17 @@ export default function JustPreview({
           </div>
         </div>
 
-        <div className="mt-6 flex flex-row justify-center items-center gap-4 md:gap-5 text-center">
+        <div className="mt-6 flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-5 text-center">
           <button
             onClick={handleShuffle}
-            className="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 md:px-8 rounded-full text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg whitespace-nowrap"
+            className="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 md:px-8 rounded-full text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg whitespace-nowrap w-full sm:w-auto"
           >
             Try Another Combo
           </button>
 
           <button
             onClick={handleAddToCart}
-            className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 md:py-4 px-6 md:px-10 rounded-full text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl whitespace-nowrap"
+            className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 md:py-4 px-6 md:px-10 rounded-full text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl whitespace-nowrap w-full sm:w-auto"
           >
             Add This Combo — ₹{currentTshirtData.price + currentDesignData.price}
           </button>
