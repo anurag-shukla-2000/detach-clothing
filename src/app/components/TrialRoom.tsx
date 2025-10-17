@@ -144,8 +144,8 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           />
         </div>
 
-        {/* Mobile Layout */}
-        <div className="md:hidden flex-1 overflow-hidden">
+        {/* Mobile-Layout */}
+        <div className="md:hidden flex-1 min-h-0">
           {activeTab === 'tshirts' && (
             <MobileTshirtsPanel 
               tshirts={tshirts}
@@ -251,9 +251,9 @@ const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
   </div>
 )
 
-// Mobile Components
+// Mobile Components - Add min-h-0 and proper height constraints
 const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 h-full overflow-y-auto">
+  <div className="p-4 h-full min-h-0 overflow-y-auto">
     <div className="grid grid-cols-2 gap-3">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
@@ -275,7 +275,7 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 h-full overflow-y-auto">
+  <div className="p-4 h-full min-h-0 overflow-y-auto">
     <div className="grid grid-cols-2 gap-3">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
@@ -297,13 +297,13 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
-  <div className="p-4 h-full flex flex-col items-center overflow-y-auto">
-    <div className="w-full max-w-xs">
+  <div className="p-4 h-full min-h-0 flex flex-col items-center overflow-y-auto">
+    <div className="w-full max-w-xs flex-shrink-0">
       <PreviewImage tshirt={tshirt} design={design} />
     </div>
 
     {tshirt && design && (
-      <div className="mt-6 text-center w-full">
+      <div className="mt-6 text-center w-full flex-shrink-0">
         <p className="font-bold text-black text-sm sm:text-base">
           {tshirt.item.label} + Design #{design.item.id}
         </p>
