@@ -61,12 +61,12 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   const totalPrice = currentTshirt && currentDesign ? currentTshirt.item.price + currentDesign.item.price : 0
 
   return (
-    <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm">
       {/* Main Container */}
-      <div className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[95vh]">
+      <div className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[90vh] sm:max-h-[85vh]">
         
         {/* Header */}
-        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 sticky top-0 bg-white z-10">
+        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 sticky top-0 bg-white z-10 shrink-0">
           <div className="flex justify-between items-center">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Your Trial Room</h2>
             <button 
@@ -111,8 +111,8 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as any)}
-                className={`flex-1 py-3 text-center font-medium text-sm ${
-                  activeTab === key ? 'text-black border-b-2 border-black' : 'text-gray-500'
+                className={`flex-1 py-3 text-center font-medium text-sm transition-colors ${
+                  activeTab === key ? 'text-black border-b-2 border-black' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
                 {label}
@@ -145,8 +145,8 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
         </div>
 
         {/* Mobile Layout */}
-        <div className="md:hidden flex-1 min-h-0 flex flex-col">
-          <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="md:hidden flex-1 min-h-0 overflow-hidden">
+          <div className="h-full overflow-y-auto scroll-smooth">
             {activeTab === 'tshirts' && (
               <MobileTshirtsPanel 
                 tshirts={tshirts}
@@ -181,15 +181,15 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
 
 // Desktop Components
 const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+  <div className="border-r border-gray-200 p-5 overflow-y-auto scroll-smooth min-h-0">
+    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center sticky top-0 bg-white z-10 pb-2">
       <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
         {tshirts.length}
       </span>
       T-Shirts
     </h3>
     
-    <div className="grid gap-4">
+    <div className="grid gap-4 pb-4">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
           key={`tshirt-${item.item.label}-${index}`}
@@ -207,15 +207,15 @@ const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
 )
 
 const DesignsColumn = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-5 overflow-y-auto min-h-0">
-    <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+  <div className="p-5 overflow-y-auto scroll-smooth min-h-0">
+    <h3 className="text-lg font-semibold text-black mb-4 flex items-center sticky top-0 bg-white z-10 pb-2">
       <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
         {designs.length}
       </span>
       Designs
     </h3>
     
-    <div className="grid gap-4">
+    <div className="grid gap-4 pb-4">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
           key={`design-${item.item.id}-${index}`}
@@ -253,7 +253,7 @@ const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
 
 // Mobile Components
 const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 pb-20">
+  <div className="p-4 pb-6">
     <div className="grid grid-cols-2 gap-3">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
@@ -275,7 +275,7 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 pb-20">
+  <div className="p-4 pb-6">
     <div className="grid grid-cols-2 gap-3">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
@@ -297,13 +297,13 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
-  <div className="p-4 pb-20 flex flex-col items-center">
-    <div className="w-full max-w-xs">
+  <div className="p-4 pb-6 flex flex-col items-center min-h-0">
+    <div className="w-full max-w-xs mb-4">
       <PreviewImage tshirt={tshirt} design={design} />
     </div>
 
     {tshirt && design && (
-      <div className="mt-6 text-center w-full">
+      <div className="text-center w-full">
         <p className="font-bold text-black text-sm sm:text-base">
           {tshirt.item.label} + Design #{design.item.id}
         </p>
@@ -317,10 +317,10 @@ const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
 const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }: any) => (
   <div 
     onClick={onSelect}
-    className={`relative p-3 sm:p-4 rounded-lg border transition-all cursor-pointer ${
+    className={`relative p-3 sm:p-4 rounded-lg border-2 transition-all cursor-pointer transform hover:scale-[1.02] active:scale-[0.98] ${
       isSelected 
-        ? 'border-black shadow-md' 
-        : 'border-gray-100 hover:border-gray-300'
+        ? 'border-black shadow-lg bg-gray-50' 
+        : 'border-gray-200 hover:border-gray-400 bg-white'
     } ${mobile ? 'min-h-0' : ''}`}
   >
     <button
@@ -328,7 +328,7 @@ const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }
         e.stopPropagation()
         onRemove()
       }}
-      className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs hover:scale-110 transition-transform z-10"
+      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:scale-110 hover:bg-red-600 transition-all duration-200 z-10 shadow-md"
     >
       ×
     </button>
@@ -337,14 +337,14 @@ const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }
         src={item.item.src}
         alt={type === 'tshirt' ? item.item.label : `Design ${item.item.id}`}
         fill
-        className="object-contain"
+        className="object-contain transition-transform duration-200"
       />
     </div>
     <div className="mt-2 text-center">
       <p className={`font-medium text-gray-900 truncate ${mobile ? 'text-sm' : 'text-base'}`}>
         {type === 'tshirt' ? item.item.label : `Design #${item.item.id}`}
       </p>
-      <p className={`text-gray-700 ${mobile ? 'text-xs' : 'text-sm'}`}>
+      <p className={`text-gray-600 ${mobile ? 'text-xs' : 'text-sm'}`}>
         {type === 'tshirt' ? `Size: ${item.size}` : 'A3 Size'}
       </p>
     </div>
@@ -352,7 +352,7 @@ const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }
 )
 
 const PreviewImage = ({ tshirt, design }: any) => (
-  <div className="relative w-full aspect-[3/4] bg-gray-50 rounded-lg shadow-inner overflow-hidden">
+  <div className="relative w-full aspect-[3/4] bg-gray-50 rounded-xl shadow-inner overflow-hidden border-2 border-gray-200">
     {tshirt ? (
       <>
         <div className="absolute inset-0 p-4">
@@ -360,7 +360,7 @@ const PreviewImage = ({ tshirt, design }: any) => (
             src={tshirt.item.src}
             alt="Selected t-shirt"
             fill
-            className="object-contain"
+            className="object-contain transition-transform duration-300"
             style={{ objectPosition: 'center 30%' }}
           />
         </div>
@@ -378,7 +378,7 @@ const PreviewImage = ({ tshirt, design }: any) => (
                 src={design.item.src}
                 alt="Selected design"
                 fill
-                className="object-contain drop-shadow-lg"
+                className="object-contain drop-shadow-lg transition-transform duration-300"
               />
             </div>
           </div>
@@ -393,8 +393,15 @@ const PreviewImage = ({ tshirt, design }: any) => (
 )
 
 const EmptyState = ({ message }: { message: string }) => (
-  <div className="text-center py-8 sm:py-10 text-gray-600 text-sm sm:text-base">
-    {message}
+  <div className="text-center py-12 text-gray-500 text-base">
+    <div className="max-w-xs mx-auto">
+      <div className="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
+        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2" />
+        </svg>
+      </div>
+      {message}
+    </div>
   </div>
 )
 
