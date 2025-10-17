@@ -144,33 +144,35 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           />
         </div>
 
-        {/* Mobile-Layout */}
-        <div className="md:hidden flex-1 min-h-0">
-          {activeTab === 'tshirts' && (
-            <MobileTshirtsPanel 
-              tshirts={tshirts}
-              selectedIndex={selectedTshirtIndex}
-              onSelect={(index: number) => navigateToPreview('tshirt', index)}
-              onRemove={handleRemoveItem}
-            />
-          )}
-          
-          {activeTab === 'preview' && (
-            <MobilePreviewPanel 
-              tshirt={currentTshirt}
-              design={currentDesign}
-              totalPrice={totalPrice}
-            />
-          )}
-          
-          {activeTab === 'designs' && (
-            <MobileDesignsPanel 
-              designs={designs}
-              selectedIndex={selectedDesignIndex}
-              onSelect={(index: number) => navigateToPreview('design', index)}
-              onRemove={handleRemoveItem}
-            />
-          )}
+        {/* Mobile Layout */}
+        <div className="md:hidden flex-1 min-h-0 overflow-hidden">
+          <div className="h-full overflow-y-auto">
+            {activeTab === 'tshirts' && (
+              <MobileTshirtsPanel 
+                tshirts={tshirts}
+                selectedIndex={selectedTshirtIndex}
+                onSelect={(index: number) => navigateToPreview('tshirt', index)}
+                onRemove={handleRemoveItem}
+              />
+            )}
+            
+            {activeTab === 'preview' && (
+              <MobilePreviewPanel 
+                tshirt={currentTshirt}
+                design={currentDesign}
+                totalPrice={totalPrice}
+              />
+            )}
+            
+            {activeTab === 'designs' && (
+              <MobileDesignsPanel 
+                designs={designs}
+                selectedIndex={selectedDesignIndex}
+                onSelect={(index: number) => navigateToPreview('design', index)}
+                onRemove={handleRemoveItem}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -251,9 +253,9 @@ const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
   </div>
 )
 
-// Mobile Components - Add min-h-0 and proper height constraints
+// Mobile Components - Remove individual scrolling and let parent handle it
 const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 h-full min-h-0 overflow-y-auto">
+  <div className="p-4">
     <div className="grid grid-cols-2 gap-3">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
@@ -275,7 +277,7 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 h-full min-h-0 overflow-y-auto">
+  <div className="p-4">
     <div className="grid grid-cols-2 gap-3">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
@@ -297,13 +299,13 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
-  <div className="p-4 h-full min-h-0 flex flex-col items-center overflow-y-auto">
-    <div className="w-full max-w-xs flex-shrink-0">
+  <div className="p-4 flex flex-col items-center">
+    <div className="w-full max-w-xs">
       <PreviewImage tshirt={tshirt} design={design} />
     </div>
 
     {tshirt && design && (
-      <div className="mt-6 text-center w-full flex-shrink-0">
+      <div className="mt-6 text-center w-full">
         <p className="font-bold text-black text-sm sm:text-base">
           {tshirt.item.label} + Design #{design.item.id}
         </p>
