@@ -61,42 +61,36 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   const totalPrice = currentTshirt && currentDesign ? currentTshirt.item.price + currentDesign.item.price : 0
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-      onClick={onClose} // Click outside to close
-    >
-      {/* Main Container - Stop propagation to prevent closing when clicking inside */}
-      <div 
-        className="bg-white rounded-2xl w-full max-w-6xl flex flex-col shadow-2xl border border-gray-200 max-h-[90vh]"
-        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
-      >
+    <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
+      {/* Main Container */}
+      <div className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[95vh]">
         
-        {/* Header - Fixed */}
-        <div className="border-b border-gray-200 p-6 flex-shrink-0">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Your Trial Room</h2>
+        {/* Header */}
+        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 sticky top-0 bg-white z-10">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Your Trial Room</h2>
             <button 
               onClick={onClose}
-              className="text-gray-500 hover:text-black transition-colors p-2 rounded-full hover:bg-gray-200"
+              className="text-gray-500 hover:text-black transition-colors p-1 rounded-full hover:bg-gray-200"
               aria-label="Close"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 w-full">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors font-medium"
+              className="flex-1 px-4 py-2.5 text-sm sm:text-base rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition-colors"
             >
               Continue Shopping
             </button>
             <button 
               onClick={() => router.push('/cart')}
-              className={`flex-1 px-6 py-3 rounded-lg transition-colors font-medium ${
+              className={`flex-1 px-4 py-2.5 text-sm sm:text-base rounded-lg transition-colors ${
                 canCheckout 
                   ? 'bg-black text-white hover:bg-gray-800' 
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -108,7 +102,7 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           </div>
 
           {/* Mobile Navigation Tabs */}
-          <div className="md:hidden flex border-b border-gray-200 -mx-6 mt-4">
+          <div className="md:hidden flex border-b border-gray-200 -mx-4 sm:-mx-5 -mb-4 sm:-mb-5">
             {[
               { key: 'tshirts', label: `T-Shirts (${tshirts.length})` },
               { key: 'preview', label: 'Preview' },
@@ -117,8 +111,8 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
               <button
                 key={key}
                 onClick={() => setActiveTab(key as any)}
-                className={`flex-1 py-4 text-center font-medium transition-colors ${
-                  activeTab === key ? 'text-black border-b-2 border-black' : 'text-gray-500 hover:text-gray-700'
+                className={`flex-1 py-3 text-center font-medium text-sm ${
+                  activeTab === key ? 'text-black border-b-2 border-black' : 'text-gray-500'
                 }`}
               >
                 {label}
@@ -127,145 +121,56 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           </div>
         </div>
 
-        {/* Content Area - This will scroll */}
-        <div className="flex-1 min-h-0 overflow-hidden">
-          {/* Desktop Layout */}
-          <div className="hidden md:grid md:grid-cols-3 h-full">
-            {/* T-shirts Column */}
-            <div className="border-r border-gray-200 overflow-hidden">
-              <div className="p-6 h-full flex flex-col">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <span className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">
-                    {tshirts.length}
-                  </span>
-                  T-Shirts
-                </h3>
-                <div className="flex-1 overflow-y-auto">
-                  <div className="space-y-4 pb-4">
-                    {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
-                      <ItemCard
-                        key={`tshirt-${item.item.label}-${index}`}
-                        item={item}
-                        isSelected={selectedTshirtIndex === index}
-                        onSelect={() => setSelectedTshirtIndex(index)}
-                        onRemove={() => handleRemoveItem(index, 'tshirt')}
-                        type="tshirt"
-                      />
-                    )) : (
-                      <EmptyState message="No t-shirts added" />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Desktop Layout */}
+        <div className="hidden md:grid md:grid-cols-3 flex-1 min-h-0">
+          <TshirtsColumn 
+            tshirts={tshirts}
+            selectedIndex={selectedTshirtIndex}
+            onSelect={setSelectedTshirtIndex}
+            onRemove={handleRemoveItem}
+          />
+          
+          <PreviewColumn 
+            tshirt={currentTshirt}
+            design={currentDesign}
+            totalPrice={totalPrice}
+          />
+          
+          <DesignsColumn 
+            designs={designs}
+            selectedIndex={selectedDesignIndex}
+            onSelect={setSelectedDesignIndex}
+            onRemove={handleRemoveItem}
+          />
+        </div>
 
-            {/* Preview Column */}
-            <div className="border-r border-gray-200 overflow-hidden">
-              <div className="p-6 h-full flex flex-col">
-                <h3 className="text-lg font-semibold text-black mb-4">Preview</h3>
-                <div className="flex-1 flex flex-col items-center justify-center min-h-0">
-                  <PreviewImage tshirt={currentTshirt} design={currentDesign} />
-                  {currentTshirt && currentDesign && (
-                    <div className="mt-6 text-center">
-                      <p className="font-bold text-black text-lg">
-                        {currentTshirt.item.label} + Design #{currentDesign.item.id}
-                      </p>
-                      <p className="text-black mt-2 text-xl font-semibold">₹{totalPrice}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Designs Column */}
-            <div className="overflow-hidden">
-              <div className="p-6 h-full flex flex-col">
-                <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
-                  <span className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center mr-2 text-sm">
-                    {designs.length}
-                  </span>
-                  Designs
-                </h3>
-                <div className="flex-1 overflow-y-auto">
-                  <div className="space-y-4 pb-4">
-                    {designs.length > 0 ? designs.map((item: any, index: number) => (
-                      <ItemCard
-                        key={`design-${item.item.id}-${index}`}
-                        item={item}
-                        isSelected={selectedDesignIndex === index}
-                        onSelect={() => setSelectedDesignIndex(index)}
-                        onRemove={() => handleRemoveItem(index, 'design')}
-                        type="design"
-                      />
-                    )) : (
-                      <EmptyState message="No designs added" />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Layout */}
-          <div className="md:hidden h-full overflow-y-auto">
+        {/* Mobile Layout */}
+        <div className="md:hidden flex-1 min-h-0 overflow-hidden">
+          <div className="h-full overflow-y-auto">
             {activeTab === 'tshirts' && (
-              <div className="p-4 pb-8">
-                <div className="grid grid-cols-2 gap-4">
-                  {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
-                    <ItemCard
-                      key={`mobile-tshirt-${item.item.label}-${index}`}
-                      item={item}
-                      isSelected={selectedTshirtIndex === index}
-                      onSelect={(index: number) => navigateToPreview('tshirt', index)}
-                      onRemove={() => handleRemoveItem(index, 'tshirt')}
-                      type="tshirt"
-                      mobile
-                    />
-                  )) : (
-                    <div className="col-span-2">
-                      <EmptyState message="No t-shirts added" />
-                    </div>
-                  )}
-                </div>
-              </div>
+              <MobileTshirtsPanel 
+                tshirts={tshirts}
+                selectedIndex={selectedTshirtIndex}
+                onSelect={(index: number) => navigateToPreview('tshirt', index)}
+                onRemove={handleRemoveItem}
+              />
             )}
             
             {activeTab === 'preview' && (
-              <div className="p-6 pb-8 flex flex-col items-center min-h-0">
-                <div className="w-full max-w-sm">
-                  <PreviewImage tshirt={currentTshirt} design={currentDesign} />
-                </div>
-                {currentTshirt && currentDesign && (
-                  <div className="mt-6 text-center w-full">
-                    <p className="font-bold text-black text-lg">
-                      {currentTshirt.item.label} + Design #{currentDesign.item.id}
-                    </p>
-                    <p className="text-black mt-2 text-xl font-semibold">₹{totalPrice}</p>
-                  </div>
-                )}
-              </div>
+              <MobilePreviewPanel 
+                tshirt={currentTshirt}
+                design={currentDesign}
+                totalPrice={totalPrice}
+              />
             )}
             
             {activeTab === 'designs' && (
-              <div className="p-4 pb-8">
-                <div className="grid grid-cols-2 gap-4">
-                  {designs.length > 0 ? designs.map((item: any, index: number) => (
-                    <ItemCard
-                      key={`mobile-design-${item.item.id}-${index}`}
-                      item={item}
-                      isSelected={selectedDesignIndex === index}
-                      onSelect={(index: number) => navigateToPreview('design', index)}
-                      onRemove={() => handleRemoveItem(index, 'design')}
-                      type="design"
-                      mobile
-                    />
-                  )) : (
-                    <div className="col-span-2">
-                      <EmptyState message="No designs added" />
-                    </div>
-                  )}
-                </div>
-              </div>
+              <MobileDesignsPanel 
+                designs={designs}
+                selectedIndex={selectedDesignIndex}
+                onSelect={(index: number) => navigateToPreview('design', index)}
+                onRemove={handleRemoveItem}
+              />
             )}
           </div>
         </div>
@@ -274,26 +179,162 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   )
 }
 
-// Shared Components (keep your existing ItemCard, PreviewImage, EmptyState)
+// Desktop Components
+const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
+  //<div className="border-r border-gray-200 p-5 overflow-y-auto">
+    <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
+    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+      <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
+        {tshirts.length}
+      </span>
+      T-Shirts
+    </h3>
+    
+    <div className="grid gap-4">
+      {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
+        <ItemCard
+          key={`tshirt-${item.item.label}-${index}`}
+          item={item}
+          isSelected={selectedIndex === index}
+          onSelect={() => onSelect(index)}
+          onRemove={() => onRemove(index, 'tshirt')}
+          type="tshirt"
+        />
+      )) : (
+        <EmptyState message="No t-shirts added" />
+      )}
+    </div>
+  </div>
+)
+
+const DesignsColumn = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
+  //<div className="p-5 overflow-y-auto">
+    <div className="p-5 overflow-y-auto min-h-0">
+    <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
+      <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
+        {designs.length}
+      </span>
+      Designs
+    </h3>
+    
+    <div className="grid gap-4">
+      {designs.length > 0 ? designs.map((item: any, index: number) => (
+        <ItemCard
+          key={`design-${item.item.id}-${index}`}
+          item={item}
+          isSelected={selectedIndex === index}
+          onSelect={() => onSelect(index)}
+          onRemove={() => onRemove(index, 'design')}
+          type="design"
+        />
+      )) : (
+        <EmptyState message="No designs added" />
+      )}
+    </div>
+  </div>
+)
+
+const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
+ <div className="border-r border-gray-200 p-5 flex flex-col min-h-0">
+    <h3 className="text-lg font-semibold text-black mb-4">Preview</h3>
+    
+    <div className="flex-1 flex flex-col items-center justify-center">
+      <PreviewImage tshirt={tshirt} design={design} />
+      
+      {tshirt && design && (
+        <div className="mt-6 text-center">
+          <p className="font-bold text-black">
+            {tshirt.item.label} + Design #{design.item.id}
+          </p>
+          <p className="text-black mt-1">₹{totalPrice}</p>
+        </div>
+      )}
+    </div>
+  </div>
+)
+
+// Mobile Components - Remove individual scrolling and let parent handle it
+const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
+  <div className="p-4">
+    <div className="grid grid-cols-2 gap-3">
+      {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
+        <ItemCard
+          key={`mobile-tshirt-${item.item.label}-${index}`}
+          item={item}
+          isSelected={selectedIndex === index}
+          onSelect={() => onSelect(index)}
+          onRemove={() => onRemove(index, 'tshirt')}
+          type="tshirt"
+          mobile
+        />
+      )) : (
+        <div className="col-span-2">
+          <EmptyState message="No t-shirts added" />
+        </div>
+      )}
+    </div>
+  </div>
+)
+
+const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
+  <div className="p-4">
+    <div className="grid grid-cols-2 gap-3">
+      {designs.length > 0 ? designs.map((item: any, index: number) => (
+        <ItemCard
+          key={`mobile-design-${item.item.id}-${index}`}
+          item={item}
+          isSelected={selectedIndex === index}
+          onSelect={() => onSelect(index)}
+          onRemove={() => onRemove(index, 'design')}
+          type="design"
+          mobile
+        />
+      )) : (
+        <div className="col-span-2">
+          <EmptyState message="No designs added" />
+        </div>
+      )}
+    </div>
+  </div>
+)
+
+const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
+  <div className="p-4 flex flex-col items-center">
+    <div className="w-full max-w-xs">
+      <PreviewImage tshirt={tshirt} design={design} />
+    </div>
+
+    {tshirt && design && (
+      <div className="mt-6 text-center w-full">
+        <p className="font-bold text-black text-sm sm:text-base">
+          {tshirt.item.label} + Design #{design.item.id}
+        </p>
+        <p className="text-black mt-1 text-lg font-semibold">₹{totalPrice}</p>
+      </div>
+    )}
+  </div>
+)
+
+// Shared Components
 const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }: any) => (
   <div 
     onClick={onSelect}
-    className={`relative p-4 rounded-lg border-2 transition-all cursor-pointer bg-white ${
+    className={`relative p-3 sm:p-4 rounded-lg border transition-all cursor-pointer ${
       isSelected 
         ? 'border-black shadow-md' 
-        : 'border-gray-200 hover:border-gray-400'
-    } ${mobile ? '' : ''}`}
+        : 'border-gray-100 hover:border-gray-300'
+    } ${mobile ? 'min-h-0' : ''}`}
   >
     <button
       onClick={(e) => {
         e.stopPropagation()
         onRemove()
       }}
-      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:scale-110 transition-transform z-10"
+      className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-500 text-white rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-xs hover:scale-110 transition-transform z-10"
     >
       ×
     </button>
-    <div className={`relative aspect-square w-full ${mobile ? 'min-h-[120px]' : 'min-h-[160px]'}`}>
+    <div className={`relative aspect-square w-full ${mobile ? 'min-h-[120px]' : 'min-h-[150px]'}`}>
       <Image
         src={item.item.src}
         alt={type === 'tshirt' ? item.item.label : `Design ${item.item.id}`}
@@ -323,6 +364,7 @@ const PreviewImage = ({ tshirt, design }: any) => (
             fill
             className="object-contain"
             style={{ objectPosition: 'center 30%' }}
+            sizes="(max-width: 768px) 80vw, 33vw"
           />
         </div>
         
@@ -340,13 +382,14 @@ const PreviewImage = ({ tshirt, design }: any) => (
                 alt="Selected design"
                 fill
                 className="object-contain drop-shadow-lg"
+                sizes="(max-width: 768px) 40vw, 20vw"
               />
             </div>
           </div>
         )}
       </>
     ) : (
-      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+      <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm sm:text-base">
         Select items to preview
       </div>
     )}
@@ -354,7 +397,7 @@ const PreviewImage = ({ tshirt, design }: any) => (
 )
 
 const EmptyState = ({ message }: { message: string }) => (
-  <div className="text-center py-12 text-gray-600">
+  <div className="text-center py-8 sm:py-10 text-gray-600 text-sm sm:text-base">
     {message}
   </div>
 )
