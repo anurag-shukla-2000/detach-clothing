@@ -168,6 +168,9 @@ export default function Navbar() {
           <Link href="/upload" className="hover:text-gray-300 transition-colors duration-200 hover:scale-105 transform">
             Upload
           </Link>
+          <Link href="/custom-orders" className="hover:text-gray-300 transition-colors duration-200 hover:scale-105 transform">
+            Custom Work
+          </Link>
           
           {/* Trial Room Button - Desktop */}
           {cartItems.length > 0 && (
@@ -220,6 +223,13 @@ export default function Navbar() {
             >
               Upload
             </Link>
+            <Link 
+  href="/custom-orders" 
+  className="hover:text-gray-300 transition-colors duration-200 py-2"
+  onClick={() => setIsMobileMenuOpen(false)}
+>
+  Custom Work
+</Link>
 {cartItems.length > 0 && (
   <div className="pt-4 border-t border-gray-700 flex justify-start">
     <button
@@ -232,6 +242,8 @@ export default function Navbar() {
       Trial Room
     </button>
   </div>
+
+  
 )}
 
 
