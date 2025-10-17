@@ -15,26 +15,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    // Get basic file info instead of the full file
-    const fileInfo = {
-      name: file.name,
-      size: (file.size / (1024 * 1024)).toFixed(2) + 'MB',
-      type: file.type
-    };
+    // Convert file to base64 for email attachment
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-    // Create email transporter
+    // Improved email transporter configuration
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false, // Use TLS
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
 
-    // Email content WITHOUT attachment
+    // Verify transporter connection
+    try {
+      await transporter.verify();
+      console.log('SMTP connection verified');
+    } catch (verifyError) {
+      console.error('SMTP connection failed:', verifyError);
+      return NextResponse.json(
+        { error: 'Email service configuration error' }, 
+        { status: 500 }
+      );
+    }
+
+    // Email content
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVING_EMAIL || process.env.EMAIL_USER,
+      from: `"Design Submission" <${process.env.EMAIL_USER}>`,
+      to: process.env.RECEIVING_EMAIL,
       subject: `New Design Submission: ${designName}`,
       html: `
         <h2>New Design Submission Received!</h2>
@@ -42,11 +56,17 @@ export async function POST(request: NextRequest) {
         <p><strong>Phone:</strong> ${phone}</p>
         <p><strong>Design Name:</strong> ${designName}</p>
         <p><strong>UPI ID:</strong> ${upiId}</p>
-        <p><strong>File Info:</strong> ${fileInfo.name} (${fileInfo.size}, ${fileInfo.type})</p>
         <p><strong>Submission Time:</strong> ${new Date().toLocaleString()}</p>
         <br/>
-        <p><em>Note: The design file has been submitted but not attached to this email due to size limitations.</em></p>
+        <p><em>Design file attached to this email.</em></p>
       `,
+      attachments: [
+        {
+          filename: file.name,
+          content: buffer,
+          contentType: file.type,
+        },
+      ],
     };
 
     await transporter.sendMail(mailOptions);
@@ -59,7 +79,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error submitting design:', error);
     return NextResponse.json(
-      { error: 'Failed to submit design' }, 
+      { error: 'Failed to submit design. Please try again.' }, 
       { status: 500 }
     );
   }
