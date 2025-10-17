@@ -95,9 +95,14 @@ export default function UploadPage() {
         throw new Error(result.error || 'Failed to submit design');
       }
     } catch (error) {
-      console.error('Submission error:', error);
-      setSubmitMessage('Sorry, there was an error submitting your design. Please try again.');
-    } finally {
+  console.error('Client submission error:', error);
+  const errorMessage = error instanceof Error 
+    ? `Error: ${error.message}` 
+    : 'Sorry, there was an error submitting your design. Please try again.';
+  setSubmitMessage(errorMessage);
+}
+
+finally {
       setIsSubmitting(false);
     }
   };

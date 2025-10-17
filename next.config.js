@@ -8,3 +8,9 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+
+module.exports = {
+  api: {
+    bodyParser: false,
+  },
+};
