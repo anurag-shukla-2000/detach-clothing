@@ -26,6 +26,10 @@ export async function POST(request: NextRequest) {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD, // Use App Password for Gmail
       },
+       secure: true,
+    tls: {
+    rejectUnauthorized: false
+  }
     });
 
     // Email content
