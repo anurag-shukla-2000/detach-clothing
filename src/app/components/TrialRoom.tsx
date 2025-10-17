@@ -61,18 +61,12 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   const totalPrice = currentTshirt && currentDesign ? currentTshirt.item.price + currentDesign.item.price : 0
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      {/* Main Container - Stop propagation to prevent closing when clicking inside */}
-      <div 
-        className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[95vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
+      {/* Main Container */}
+      <div className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[95vh]">
         
         {/* Header */}
-        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 flex-shrink-0">
+        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 sticky top-0 bg-white z-10">
           <div className="flex justify-between items-center">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Your Trial Room</h2>
             <button 
@@ -127,7 +121,7 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           </div>
         </div>
 
-        {/* Desktop Layout - UNCHANGED */}
+        {/* Desktop Layout */}
         <div className="hidden md:grid md:grid-cols-3 flex-1 min-h-0">
           <TshirtsColumn 
             tshirts={tshirts}
@@ -151,8 +145,9 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
         </div>
 
         {/* Mobile Layout - FIXED SCROLLING */}
-        <div className="md:hidden flex-1 min-h-0 overflow-hidden">
-          <div className="h-full overflow-y-auto touch-pan-y scroll-smooth">
+        <div className="md:hidden flex-1 min-h-0 flex flex-col">
+          {/* Main scrolling container with improved touch support */}
+          <div className="flex-1 overflow-y-auto overscroll-contain touch-auto">
             {activeTab === 'tshirts' && (
               <MobileTshirtsPanel 
                 tshirts={tshirts}
@@ -185,7 +180,7 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   )
 }
 
-// Desktop Components - UNCHANGED
+// Desktop Components
 const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
   <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -257,10 +252,10 @@ const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
   </div>
 )
 
-// Mobile Components - IMPROVED WITH BETTER PADDING
+// Mobile Components - Improved scrolling behavior
 const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 pb-8">
-    <div className="grid grid-cols-2 gap-4">
+  <div className="p-4 pb-6">
+    <div className="grid grid-cols-2 gap-3">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
           key={`mobile-tshirt-${item.item.label}-${index}`}
@@ -281,8 +276,8 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4 pb-8">
-    <div className="grid grid-cols-2 gap-4">
+  <div className="p-4 pb-6">
+    <div className="grid grid-cols-2 gap-3">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
           key={`mobile-design-${item.item.id}-${index}`}
@@ -303,23 +298,23 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
-  <div className="p-6 pb-8 flex flex-col items-center min-h-0">
-    <div className="w-full max-w-xs mb-6">
+  <div className="p-4 pb-6 flex flex-col items-center min-h-full">
+    <div className="w-full max-w-xs flex-1 flex flex-col justify-center">
       <PreviewImage tshirt={tshirt} design={design} />
     </div>
 
     {tshirt && design && (
-      <div className="text-center w-full">
-        <p className="font-bold text-black text-lg">
+      <div className="mt-6 text-center w-full">
+        <p className="font-bold text-black text-sm sm:text-base">
           {tshirt.item.label} + Design #{design.item.id}
         </p>
-        <p className="text-black mt-2 text-xl font-semibold">₹{totalPrice}</p>
+        <p className="text-black mt-1 text-lg font-semibold">₹{totalPrice}</p>
       </div>
     )}
   </div>
 )
 
-// Shared Components - UNCHANGED
+// Shared Components
 const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }: any) => (
   <div 
     onClick={onSelect}
@@ -344,6 +339,7 @@ const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }
         alt={type === 'tshirt' ? item.item.label : `Design ${item.item.id}`}
         fill
         className="object-contain"
+        sizes={mobile ? "(max-width: 768px) 50vw, 33vw" : "33vw"}
       />
     </div>
     <div className="mt-2 text-center">
