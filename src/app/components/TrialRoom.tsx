@@ -61,12 +61,18 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   const totalPrice = currentTshirt && currentDesign ? currentTshirt.item.price + currentDesign.item.price : 0
 
   return (
-    <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
-      {/* Main Container */}
-      <div className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[95vh]">
+    <div 
+      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      {/* Main Container - Stop propagation to prevent closing when clicking inside */}
+      <div 
+        className="bg-white rounded-xl sm:rounded-2xl w-full max-w-4xl flex flex-col shadow-2xl border border-gray-200 max-h-[95vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* Header */}
-        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 sticky top-0 bg-white z-10">
+        <div className="border-b border-gray-200 p-4 sm:p-5 flex flex-col gap-3 sm:gap-4 flex-shrink-0">
           <div className="flex justify-between items-center">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Your Trial Room</h2>
             <button 
@@ -121,7 +127,7 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           </div>
         </div>
 
-        {/* Desktop Layout */}
+        {/* Desktop Layout - UNCHANGED */}
         <div className="hidden md:grid md:grid-cols-3 flex-1 min-h-0">
           <TshirtsColumn 
             tshirts={tshirts}
@@ -144,9 +150,9 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
           />
         </div>
 
-        {/* Mobile Layout */}
+        {/* Mobile Layout - FIXED SCROLLING */}
         <div className="md:hidden flex-1 min-h-0 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+          <div className="h-full overflow-y-auto touch-pan-y scroll-smooth">
             {activeTab === 'tshirts' && (
               <MobileTshirtsPanel 
                 tshirts={tshirts}
@@ -179,10 +185,9 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
   )
 }
 
-// Desktop Components
+// Desktop Components - UNCHANGED
 const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  //<div className="border-r border-gray-200 p-5 overflow-y-auto">
-    <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
+  <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
       <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
         {tshirts.length}
@@ -208,8 +213,7 @@ const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
 )
 
 const DesignsColumn = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  //<div className="p-5 overflow-y-auto">
-    <div className="p-5 overflow-y-auto min-h-0">
+  <div className="p-5 overflow-y-auto min-h-0">
     <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
       <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
         {designs.length}
@@ -235,7 +239,7 @@ const DesignsColumn = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
 )
 
 const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
- <div className="border-r border-gray-200 p-5 flex flex-col min-h-0">
+  <div className="border-r border-gray-200 p-5 flex flex-col min-h-0">
     <h3 className="text-lg font-semibold text-black mb-4">Preview</h3>
     
     <div className="flex-1 flex flex-col items-center justify-center">
@@ -253,10 +257,10 @@ const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
   </div>
 )
 
-// Mobile Components - Remove individual scrolling and let parent handle it
+// Mobile Components - IMPROVED WITH BETTER PADDING
 const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4">
-    <div className="grid grid-cols-2 gap-3">
+  <div className="p-4 pb-8">
+    <div className="grid grid-cols-2 gap-4">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
           key={`mobile-tshirt-${item.item.label}-${index}`}
@@ -277,8 +281,8 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4">
-    <div className="grid grid-cols-2 gap-3">
+  <div className="p-4 pb-8">
+    <div className="grid grid-cols-2 gap-4">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
           key={`mobile-design-${item.item.id}-${index}`}
@@ -299,23 +303,23 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
-  <div className="p-4 flex flex-col items-center">
-    <div className="w-full max-w-xs">
+  <div className="p-6 pb-8 flex flex-col items-center min-h-0">
+    <div className="w-full max-w-xs mb-6">
       <PreviewImage tshirt={tshirt} design={design} />
     </div>
 
     {tshirt && design && (
-      <div className="mt-6 text-center w-full">
-        <p className="font-bold text-black text-sm sm:text-base">
+      <div className="text-center w-full">
+        <p className="font-bold text-black text-lg">
           {tshirt.item.label} + Design #{design.item.id}
         </p>
-        <p className="text-black mt-1 text-lg font-semibold">₹{totalPrice}</p>
+        <p className="text-black mt-2 text-xl font-semibold">₹{totalPrice}</p>
       </div>
     )}
   </div>
 )
 
-// Shared Components
+// Shared Components - UNCHANGED
 const ItemCard = ({ item, isSelected, onSelect, onRemove, type, mobile = false }: any) => (
   <div 
     onClick={onSelect}
