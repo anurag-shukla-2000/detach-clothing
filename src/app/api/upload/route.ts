@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         <p><strong>File Info:</strong> ${fileInfo.name} (${fileInfo.size}, ${fileInfo.type})</p>
         <p><strong>Submission Time:</strong> ${new Date().toLocaleString()}</p>
         <br/>
-        <p><em>Note: The design file has been submitted but not attached to this email due to size limitations. Please check your storage system.</em></p>
+        <p><em>Note: The design file has been submitted but not attached to this email due to size limitations.</em></p>
       `,
     };
 
