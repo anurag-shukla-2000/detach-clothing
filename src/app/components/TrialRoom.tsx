@@ -145,8 +145,8 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
         </div>
 
         {/* Mobile Layout */}
-        <div className="md:hidden flex-1 min-h-0 overflow-hidden">
-          <div className="h-full overflow-y-auto">
+        <div className="md:hidden flex-1 min-h-0 flex flex-col">
+          <div className="flex-1 min-h-0 overflow-y-auto">
             {activeTab === 'tshirts' && (
               <MobileTshirtsPanel 
                 tshirts={tshirts}
@@ -181,8 +181,7 @@ const TrialRoom = ({ onClose }: TrialRoomProps) => {
 
 // Desktop Components
 const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  //<div className="border-r border-gray-200 p-5 overflow-y-auto">
-    <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
+  <div className="border-r border-gray-200 p-5 overflow-y-auto min-h-0">
     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
       <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
         {tshirts.length}
@@ -208,8 +207,7 @@ const TshirtsColumn = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
 )
 
 const DesignsColumn = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  //<div className="p-5 overflow-y-auto">
-    <div className="p-5 overflow-y-auto min-h-0">
+  <div className="p-5 overflow-y-auto min-h-0">
     <h3 className="text-lg font-semibold text-black mb-4 flex items-center">
       <span className="bg-black text-white rounded-full w-5 h-5 flex items-center justify-center mr-2 text-xs">
         {designs.length}
@@ -235,7 +233,7 @@ const DesignsColumn = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
 )
 
 const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
- <div className="border-r border-gray-200 p-5 flex flex-col min-h-0">
+  <div className="border-r border-gray-200 p-5 flex flex-col min-h-0">
     <h3 className="text-lg font-semibold text-black mb-4">Preview</h3>
     
     <div className="flex-1 flex flex-col items-center justify-center">
@@ -253,9 +251,9 @@ const PreviewColumn = ({ tshirt, design, totalPrice }: any) => (
   </div>
 )
 
-// Mobile Components - Remove individual scrolling and let parent handle it
+// Mobile Components
 const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4">
+  <div className="p-4 pb-20">
     <div className="grid grid-cols-2 gap-3">
       {tshirts.length > 0 ? tshirts.map((item: any, index: number) => (
         <ItemCard
@@ -268,7 +266,7 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
           mobile
         />
       )) : (
-        <div className="col-span-2">
+        <div className="col-span-2 py-8">
           <EmptyState message="No t-shirts added" />
         </div>
       )}
@@ -277,7 +275,7 @@ const MobileTshirtsPanel = ({ tshirts, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any) => (
-  <div className="p-4">
+  <div className="p-4 pb-20">
     <div className="grid grid-cols-2 gap-3">
       {designs.length > 0 ? designs.map((item: any, index: number) => (
         <ItemCard
@@ -290,7 +288,7 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
           mobile
         />
       )) : (
-        <div className="col-span-2">
+        <div className="col-span-2 py-8">
           <EmptyState message="No designs added" />
         </div>
       )}
@@ -299,7 +297,7 @@ const MobileDesignsPanel = ({ designs, selectedIndex, onSelect, onRemove }: any)
 )
 
 const MobilePreviewPanel = ({ tshirt, design, totalPrice }: any) => (
-  <div className="p-4 flex flex-col items-center">
+  <div className="p-4 pb-20 flex flex-col items-center">
     <div className="w-full max-w-xs">
       <PreviewImage tshirt={tshirt} design={design} />
     </div>
@@ -364,7 +362,6 @@ const PreviewImage = ({ tshirt, design }: any) => (
             fill
             className="object-contain"
             style={{ objectPosition: 'center 30%' }}
-            sizes="(max-width: 768px) 80vw, 33vw"
           />
         </div>
         
@@ -382,7 +379,6 @@ const PreviewImage = ({ tshirt, design }: any) => (
                 alt="Selected design"
                 fill
                 className="object-contain drop-shadow-lg"
-                sizes="(max-width: 768px) 40vw, 20vw"
               />
             </div>
           </div>
