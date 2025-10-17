@@ -1,50 +1,40 @@
-// pages/api/upload.ts
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+export async function POST(request: NextRequest) {
   try {
-    // You'll need to handle multipart form data differently in Pages Router
-    const formData = await new Promise<any>((resolve, reject) => {
-      // This is simplified - you might need a library like formidable
-      let body = '';
-      req.on('data', chunk => {
-        body += chunk.toString();
-      });
-      req.on('end', () => {
-        resolve(body);
-      });
-      req.on('error', reject);
-    });
+    const formData = await request.formData();
+    
+    const name = formData.get('name') as string;
+    const phone = formData.get('phone') as string;
+    const designName = formData.get('designName') as string;
+    const upiId = formData.get('upiId') as string;
+    const file = formData.get('file') as File;
 
-    // For now, let's create a simpler version without file upload
-    const { name, phone, designName, upiId } = JSON.parse(formData);
+    if (!file) {
+      return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+    }
 
+    // Get basic file info instead of the full file
+    const fileInfo = {
+      name: file.name,
+      size: (file.size / (1024 * 1024)).toFixed(2) + 'MB',
+      type: file.type
+    };
+
+    // Create email transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       },
-      secure: true,
-      tls: {
-        rejectUnauthorized: false
-      }
     });
 
+    // Email content WITHOUT attachment
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: process.env.RECEIVING_EMAIL,
+      to: process.env.RECEIVING_EMAIL || process.env.EMAIL_USER,
       subject: `New Design Submission: ${designName}`,
       html: `
         <h2>New Design Submission Received!</h2>
@@ -52,19 +42,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         <p><strong>Phone:</strong> ${phone}</p>
         <p><strong>Design Name:</strong> ${designName}</p>
         <p><strong>UPI ID:</strong> ${upiId}</p>
+        <p><strong>File Info:</strong> ${fileInfo.name} (${fileInfo.size}, ${fileInfo.type})</p>
         <p><strong>Submission Time:</strong> ${new Date().toLocaleString()}</p>
+        <br/>
+        <p><em>Note: The design file has been submitted but not attached to this email due to size limitations. Please check your storage system.</em></p>
       `,
     };
 
     await transporter.sendMail(mailOptions);
 
-    return res.status(200).json({ 
+    return NextResponse.json({ 
       success: true, 
       message: 'Design submitted successfully!' 
     });
 
   } catch (error) {
     console.error('Error submitting design:', error);
-    return res.status(500).json({ error: 'Failed to submit design' });
+    return NextResponse.json(
+      { error: 'Failed to submit design' }, 
+      { status: 500 }
+    );
   }
 }
